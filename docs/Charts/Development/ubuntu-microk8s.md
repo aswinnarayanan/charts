@@ -11,6 +11,7 @@ NB: [Ansible playbooks and/or roles](https://github.com/Australian-Imaging-Servi
 
 ```bash
 sudo snap install microk8s --classic
+microk8s enable community
 microk8s enable dns fluentd ingress metrics-server prometheus rbac registry storage
 
 # Install and configure the kubectl client
