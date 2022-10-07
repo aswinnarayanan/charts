@@ -75,7 +75,7 @@ spec:
         - name: {{ .Chart.Name }}-logstream
           image: alpine
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args: ["/bin/sh", "-c", "tail -f /JavaPrograms/CTP/logs/ctp.log"]
+          args: ["/bin/sh", "-c", "tail -F /JavaPrograms/CTP/logs/ctp.log"]
           volumeMounts:
             - name: logs
               mountPath: /JavaPrograms/CTP/logs
