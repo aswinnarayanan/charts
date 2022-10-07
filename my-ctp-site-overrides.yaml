@@ -1,0 +1,204 @@
+# Default values for ctp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/australian-imaging-service/mirc-ctp
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+services: 
+  web:
+    enabled: true
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+    nodePort: 30001
+  httpsimport:
+    enabled: true
+    type: NodePort 
+    port: 7777
+    targetPort: 7777
+    nodePort: 30002
+  dicomimport:
+    enabled: false
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: public
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  hosts: 
+    - uat-ctp.ais-xnat.cloud.edu.au
+  tls:
+   - secretName: uat-ctp-ais-xnat-cloud-edu-au-tls
+     hosts:
+       - uat-ctp.ais-xnat.cloud.edu.au
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+users:
+  admin:
+   password: "126680608771750945340162210354335764377"
+   roles:
+     - admin
+  king:
+   password: "126680608771750945340162210354335764377"
+   roles:
+     - admin
+     - shutdown
+
+timezone: Australia/Brisbane
+
+config: |
+  <?xml version="1.0" encoding="UTF-8"?>
+  <Configuration>
+      <Server
+          maxThreads="20"
+          port="80"/>
+      <Plugin
+          class="org.rsna.ctp.stdplugins.AuditLog"
+          id="AuditLog"
+          name="AuditLog"
+          root="roots/AuditLog"/>
+      <Pipeline name="HTTPSender">
+          <HttpImportService
+              class="org.rsna.ctp.stdstages.HttpImportService"
+              logConnections="no"
+              name="HttpImportService"
+              port="7777"
+              quarantine="quarantines/HttpImportService"
+              root="roots/HttpImportService"
+              ssl="no"
+              zip="yes"/>
+          <DirectoryStorageService
+              acceptDuplicates="yes"
+              class="org.rsna.ctp.stdstages.DirectoryStorageService"
+              defaultString="UNKNOWN"
+              logDuplicates="no"
+              name="DirectoryStorageService"
+              quarantine="quarantines/DirectoryStorageService"
+              root="roots/DirectoryStorageService"
+              setStandardExtensions="no"
+              structure="(0008,0090)-(0010,0020)/(0020,000D)"
+              whitespaceReplacement="_"/>
+          <DicomExportService
+              class="org.rsna.ctp.stdstages.DicomExportService"
+              name="DicomExportService"
+              quarantine="quarantines/DicomExportService"
+              root="roots/DicomExportService"
+              url="dicom://XNAT:XNAT@uat-xnat.ais-xnat.cloud.edu.au:8104"/>
+      </Pipeline>
+  </Configuration>
+
+launcherProperties: |
+  ms=128
+  mx=512
+
+# ports:
+#   web: 24050
+#   dicomImportService: 25055
+
+pipelines: {}
+  #Main_Pipeline:
+  #  desc: "Main Pipeline"
+  #  stages:
+  #    - name: "DicomImportService"
+  #      root: "roots/dicom-import"
+  #      port: 1104
+  #    - name: "FileStorageService"
+  #      root: "storage"
+  #      returnStoredFile: false
+  #      quarantine: "quarantines/storage"
+  #    - name: "DicomAnonymizer"
+  #      root: "roots/anonymizer"
+  #      script: "scripts/da.script"
+  #      quarantine: "quarantines/anonymizer"
+  #    - name: "HttpExportService"
+  #      root: "roots/http-export"
+  #      url: "https://university.edu:1443"
+
+# proxyServer:
+#   ipAddress: ""
+#   port: 3129
+#   username: ""
+#   password: ""
+
+volumes:
+  roots:
+    accessMode: ReadWriteMany
+    #existingClaim: ""
+    mountPath: "/vol/roots"
+    #storageClassName: "-"
+    size: 10Gi
+  # quarantines:
+  #   accessMode: ReadWriteMany
+  #   #existingClaim: ""
+  #   mountPath: "/vol/quarantines"
+  #   #storageClassName: "-"
+  #   size: 1Ti
+  # logs:
+  #   accessMode: ReadWriteMany
+  #   #existingClaim: ""
+  #   mountPath: "/vol/roots"
+  #   #storageClassName: "-"
+  #   size: 1Mi
+  # scripts:
+  #   accessMode: ReadWriteMany
+  #   #existingClaim: ""
+  #   mountPath: "/vol/roots"
+  #   #storageClassName: "-"
+  #   size: 10Gi
