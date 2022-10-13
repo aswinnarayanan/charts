@@ -52,18 +52,20 @@ services:
   dicomimport:
     enabled: false
 
-ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.class: public
-    kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-  hosts: 
-    - uat-ctp.ais-xnat.cloud.edu.au
-  tls:
-   - secretName: uat-ctp-ais-xnat-cloud-edu-au-tls
-     hosts:
-       - uat-ctp.ais-xnat.cloud.edu.au
+# ingress:
+#   enabled: true
+#   annotations:
+#     kubernetes.io/ingress.class: public
+#     kubernetes.io/tls-acme: "true"
+#     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+#   hosts: 
+#     - uat-ctp.ais-xnat.cloud.edu.au
+#   tls:
+#    - secretName: uat-ctp-ais-xnat-cloud-edu-au-tls
+#      hosts:
+#        - uat-ctp.ais-xnat.cloud.edu.au
+
+ingress: {}
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
