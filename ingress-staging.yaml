@@ -18,6 +18,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: ctp-web
+            name: ctp-httpsimport
             port:
-              number: 80
+              number: 7777

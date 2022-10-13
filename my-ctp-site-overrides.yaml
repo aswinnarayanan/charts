@@ -45,9 +45,9 @@ services:
     nodePort: 30001
   httpsimport:
     enabled: true
-    type: NodePort 
+    type: ClusterIP 
     port: 7777
-    targetPort: 7777
+    targetPort: 17777
     nodePort: 30002
   dicomimport:
     enabled: false
@@ -121,7 +121,7 @@ config: |
               class="org.rsna.ctp.stdstages.HttpImportService"
               logConnections="no"
               name="HttpImportService"
-              port="7777"
+              port="17777"
               quarantine="quarantines/HttpImportService"
               root="roots/HttpImportService"
               ssl="no"
