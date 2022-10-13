@@ -7,6 +7,7 @@ microk8s enable dns fluentd ingress metrics-server prometheus rbac registry stor
 helm repo add ais https://australian-imaging-service.github.io/charts
 helm repo update
 
+kubectl delete namespaces cert-manager
 kubectl delete namespaces ctp
 kubectl create namespace ctp
 
