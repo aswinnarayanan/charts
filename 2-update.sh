@@ -41,3 +41,6 @@ kubectl create -n ctp -f ingress-prod.yaml
           #     hostPort: 10254
           #     containerPort: 10254
           #     protocol: TCP
+
+
+# kubectl patch ingress -n ctp ingress-prod -p '{"metadata": {"annotations": {"nginx.ingress.kubernetes.io/proxy-body-size": "0"}}}'
