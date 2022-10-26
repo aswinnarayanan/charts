@@ -43,9 +43,9 @@ services:
     port: 80
     targetPort: 80
     nodePort: 30001
-  httpsimport:
+  httpsimport: 
     enabled: true
-    type: ClusterIP 
+    type: NodePort 
     port: 7777
     targetPort: 17777
     nodePort: 30002
@@ -122,8 +122,8 @@ config: |
               logConnections="no"
               name="HttpImportService"
               port="17777"
-              quarantine="quarantines/HttpImportService"
-              root="roots/HttpImportService"
+              quarantine="/data/ctp/quarantines/HttpImportService"
+              root="/data/ctp/roots/HttpImportService"
               ssl="no"
               zip="yes"/>
           <DirectoryStorageService
@@ -132,17 +132,17 @@ config: |
               defaultString="UNKNOWN"
               logDuplicates="no"
               name="DirectoryStorageService"
-              quarantine="quarantines/DirectoryStorageService"
-              root="roots/DirectoryStorageService"
+              quarantine="/data/ctp/quarantines/DirectoryStorageService"
+              root="/data/ctp/roots/DirectoryStorageService"
               setStandardExtensions="no"
               structure="(0008,0090)-(0010,0020)/(0020,000D)"
               whitespaceReplacement="_"/>
           <DicomExportService
               class="org.rsna.ctp.stdstages.DicomExportService"
               name="DicomExportService"
-              quarantine="quarantines/DicomExportService"
+              quarantine="/data/ctp/quarantines/DicomExportService"
               root="roots/DicomExportService"
-              url="dicom://XNAT:XNAT@uat-xnat.ais-xnat.cloud.edu.au:8104"/>
+              url="dicom://XNAT:XNAT@xnat.rcc.uq.edu.au:8104"/>
       </Pipeline>
   </Configuration>
 
@@ -180,12 +180,18 @@ pipelines: {}
 #   password: ""
 
 volumes:
-  roots:
+  data-ctp:
     accessMode: ReadWriteMany
-    #existingClaim: ""
-    mountPath: "/vol/roots"
+    existingClaim: "data-ctp"
+    mountPath: "/data/ctp"
     #storageClassName: "-"
-    size: 10Gi
+    size: 400Gi
+  # roots:
+  #   accessMode: ReadWriteMany
+  #   #existingClaim: ""
+  #   mountPath: "/vol/roots"
+  #   #storageClassName: "-"
+  #   size: 10Gi
   # quarantines:
   #   accessMode: ReadWriteMany
   #   #existingClaim: ""

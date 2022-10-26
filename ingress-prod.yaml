@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - uat-ctp.ais-xnat.cloud.edu.au
-    secretName: uat-ctp-ais-xnat-cloud-edu-au-tls
+    - ctp.rcc.uq.edu.au
+    secretName: ctp-rcc-uq-edu-au-tls
   rules:
-  - host: uat-ctp.ais-xnat.cloud.edu.au
+  - host: ctp.rcc.uq.edu.au
     http:
       paths:
       - path: /

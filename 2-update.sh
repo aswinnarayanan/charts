@@ -44,3 +44,8 @@ kubectl create -n ctp -f ingress-prod.yaml
 
 
 # kubectl patch ingress -n ctp ingress-prod -p '{"metadata": {"annotations": {"nginx.ingress.kubernetes.io/proxy-body-size": "0"}}}'
+
+
+kubectl -n ctp apply -f pv.yaml
+kubectl -n ctp apply -f pvc.yaml
+

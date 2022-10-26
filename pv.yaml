@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-ctp
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 400Gi
+  hostPath:
+    path: /data/ctp
+  storageClassName: manual
